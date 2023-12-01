@@ -14,7 +14,7 @@ exports.cookieExtractor = function (req) {
     token = req.cookies['jwt'];
   }
   //TODO : this is temporary token for testing without cookie
- token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NWIwMzQ2YWYzOGMxM2U2YTYyODEwNSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzAwNDY1MzA1fQ.vfW52z8KKdkM8OjOjAWO0nksJAeA48IEDBSVCxA21-o";
- //token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NWIzZTBlNGRkYjAyMGY3NjA5ZTU0ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwMDQ3ODU4N30.HlQFRG908jjog-fSwkZn-F-xPlNFic2DLHZDrZXt2oA"
+ token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjhjOTlhNzE1N2QwYmU0YWU1MmQ0NSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzAxMzY2MTcwfQ.hEe9Sqe4tAEhXvLCqiiXUVzUCAKUVhF0ojbkR3dwvcc";
+ //token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjhjYjQzMjdhOWYwYTQxMTE3ZDAxZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwMTM2NjU5NX0.mLbFN_nPuEVRAzD9zEnGA5Mt_LVucFn8p22FPl_QGj8";
   return token;
 };
