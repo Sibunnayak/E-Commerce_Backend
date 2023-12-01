@@ -14,7 +14,7 @@ const jwt = require('jsonwebtoken');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const cookieParser = require('cookie-parser');
-
+const { Order } = require('./model/Order');
 const usersRouter = require('./routes/Users');
 const authRouter = require('./routes/Auth');
 const cartRouter = require('./routes/Cart');
@@ -35,7 +35,7 @@ const path = require('path');
 
 const endpointSecret = process.env.ENDPOINT_SECRET;
 
-server.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
+server.post('/webhook', express.raw({type: 'application/json'}), async(request, response) => {
   const sig = request.headers['stripe-signature'];
 
   let event;
@@ -53,6 +53,9 @@ server.post('/webhook', express.raw({type: 'application/json'}), (request, respo
       const paymentIntentSucceeded = event.data.object;
       console.log({paymentIntentSucceeded})
       // Then define and call a function to handle the event payment_intent.succeeded
+      const order = await Order.findById(paymentIntentSucceeded.metadata.orderId);
+      order.paymentStatus = 'received';
+      await order.save()
       break;
     // ... handle other event types
     default:
@@ -65,8 +68,8 @@ server.post('/webhook', express.raw({type: 'application/json'}), (request, respo
 
 
 //middlewares
-// server.use(express.static(path.resolve(__dirname,'build')))
-server.use(express.static('build'))
+server.use(express.static(path.resolve(__dirname,'build')))
+// server.use(express.static('build'))
 server.use(cookieParser());
 
 server.use(
@@ -91,7 +94,7 @@ server.use('/users', isAuth(), usersRouter.router);
 server.use('/auth', authRouter.router);
 server.use('/cart', isAuth(), cartRouter.router);
 server.use('/orders', isAuth(), ordersRouter.router);
-
+server.get('*', (req, res) => res.sendFile(path.resolve('build', 'index.html')));
 passport.use(
     'local',
     new LocalStrategy({usernameField:'email'},async function (email, password, done) {
@@ -164,7 +167,7 @@ const stripe = require("stripe")(process.env.STRIPE_SERVER_KEY);
 
 
 server.post("/create-payment-intent", async (req, res) => {
-  const { totalAmount } = req.body;
+  const { totalAmount,orderId } = req.body;
 
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
@@ -173,6 +176,9 @@ server.post("/create-payment-intent", async (req, res) => {
     automatic_payment_methods: {
       enabled: true,
     },
+    metadata:{
+      orderId
+    }
   });
 
   res.send({
