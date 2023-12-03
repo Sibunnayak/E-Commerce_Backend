@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
 const server = express();
 const mongoose = require('mongoose');
@@ -22,7 +22,6 @@ const ordersRouter = require('./routes/Order');
 const { User } = require('./model/User');
 const { isAuth, sanitizeUser, cookieExtractor } = require('./services/common');
 const { env } = require('process');
-// console.log(process.env)
 // const SECRET_KEY = 'SECRET_KEY';
 // JWT options
 const opts = {};
@@ -52,7 +51,7 @@ server.post('/webhook', express.raw({type: 'application/json'}), async(request, 
   switch (event.type) {
     case 'payment_intent.succeeded':
       const paymentIntentSucceeded = event.data.object;
-      console.log({paymentIntentSucceeded})
+      // console.log({paymentIntentSucceeded})
       // Then define and call a function to handle the event payment_intent.succeeded
       const order = await Order.findById(paymentIntentSucceeded.metadata.orderId);
       order.paymentStatus = 'received';
@@ -129,7 +128,7 @@ passport.use(
   passport.use(
     'jwt',
     new JwtStrategy(opts, async function (jwt_payload, done) {
-      console.log({ jwt_payload });
+      // console.log({ jwt_payload });
       try {
         const user = await User.findById(jwt_payload.id);
         if (user) {
@@ -145,7 +144,7 @@ passport.use(
 
   // this creates session variable req.user on being called from callbacks
 passport.serializeUser(function (user, cb) {
-    console.log('serialize', user);
+    // console.log('serialize', user);
     process.nextTick(function () {
       return cb(null, { id: user.id, role: user.role });
     });
@@ -154,7 +153,7 @@ passport.serializeUser(function (user, cb) {
   // this changes session variable req.user when called from authorized request
 
 passport.deserializeUser(function (user, cb) {
-    console.log('de-serialize', user);
+    // console.log('de-serialize', user);
     process.nextTick(function () {
       return cb(null, user);
     });
