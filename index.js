@@ -21,6 +21,7 @@ const cartRouter = require('./routes/Cart');
 const ordersRouter = require('./routes/Order');
 const { User } = require('./model/User');
 const { isAuth, sanitizeUser, cookieExtractor } = require('./services/common');
+const { env } = require('process');
 // console.log(process.env)
 // const SECRET_KEY = 'SECRET_KEY';
 // JWT options
